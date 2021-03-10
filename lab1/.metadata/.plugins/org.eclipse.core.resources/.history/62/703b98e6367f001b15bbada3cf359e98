@@ -1,0 +1,101 @@
+package example1;
+
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+public class Window {
+	protected JFrame frame;
+	protected JPanel panel;
+	private JTextField textField;
+
+	public Window() { 
+		initialize();
+	}
+
+	private void initialize() {
+		setFrame(new JFrame());
+		
+		getFrame().setBounds(100, 100, 600, 400);
+		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		textField = new JTextField();
+		textField.setBounds(164, 50, 221, 28);
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
+		
+		JButton btnSnap = new JButton("Snapshot");
+		btnSnap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String path = textField.getText();
+				String[] pathnames = null;
+				FileWriter writeFile = null;
+				String textToWrite = "";
+				
+		        Desktop desktop = Desktop.getDesktop();
+		        File dirToOpen = null;
+		        try {
+		            dirToOpen = new File(path);
+		            try {
+						desktop.open(dirToOpen);
+						pathnames = dirToOpen.list();
+						int iterator = 0;
+						for ( String i: pathnames) {
+							textToWrite = pathnames[iterator];
+							File data = new File("\\C:\\Users\\huawei\\Desktop\\Test\\filename.txt");
+				        	writeFile = new FileWriter("filename.txt");
+				           	writeFile.write(textToWrite);
+							iterator++;
+						}
+						System.out.println(textToWrite);
+						/*File data = new File(path + "\filename.txt");
+
+			            if (writeFile != null) {
+			            	writeFile.close();
+			            }
+			            */
+					} catch (IOException e1) {
+						 System.out.println("File cannot be open");
+					}
+		        } catch (IllegalArgumentException iae) {
+		            System.out.println("File Not Found");
+		        }
+   
+		        
+		        
+		        
+		        
+		        
+		        
+			}
+		});
+		btnSnap.setBounds(164, 88, 85, 21);
+		frame.getContentPane().add(btnSnap);
+		
+		JButton btnVer = new JButton("Verification");
+		btnVer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnVer.setBounds(300, 88, 85, 21);
+		frame.getContentPane().add(btnVer);
+		}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}	
+}

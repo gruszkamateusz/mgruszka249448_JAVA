@@ -1,0 +1,6 @@
+module ModulAplikacji {
+	
+	requires ModulBiblioteki;
+	requires java.desktop;
+	requires jdk.internal.opt;
+}

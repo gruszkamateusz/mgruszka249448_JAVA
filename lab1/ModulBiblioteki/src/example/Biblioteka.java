@@ -1,0 +1,18 @@
+package example;
+
+import javax.swing.JOptionPane;
+
+public class Biblioteka {
+	
+public static void check(String newMD5, String oldMD5) {
+	if (newMD5.equals(oldMD5)) {
+		JOptionPane.showMessageDialog(null, "Nothing new in a file");
+	}
+	else {
+		JOptionPane.showMessageDialog(null, "There's something new in a file");
+	}
+}
+
+
+
+}

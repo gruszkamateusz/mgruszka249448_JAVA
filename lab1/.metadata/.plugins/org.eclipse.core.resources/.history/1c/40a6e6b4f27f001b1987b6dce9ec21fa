@@ -1,0 +1,7 @@
+package example;
+
+public class Encoder {
+public static void Hello() {
+	System.out.println("Hello");
+}
+}

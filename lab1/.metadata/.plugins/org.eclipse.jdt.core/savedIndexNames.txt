@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+C:\Users\huawei\ModulAplikacji\.metadata\.plugins\org.eclipse.jdt.core
+2007310181.index
+642026637.index
+3757681199.index

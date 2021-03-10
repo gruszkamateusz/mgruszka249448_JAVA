@@ -1,0 +1,194 @@
+package example1;
+
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+public class Window {
+	protected JFrame frame;
+	protected JPanel panel;
+	private JTextField textField;
+	private static String[] pathnames = null;
+	private static Desktop desktop = Desktop.getDesktop();
+	private static File dirToOpen = null;
+	private static ArrayList<String> dataFromFile = new ArrayList<>();
+    
+	public Window() { 
+		initialize();
+	}
+
+	private void initialize() {
+		setFrame(new JFrame());
+		
+		getFrame().setBounds(100, 100, 600, 400);
+		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		textField = new JTextField();
+		textField.setBounds(164, 50, 221, 28);
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
+		JButton btnSnap = new JButton("Snapshot");
+		btnSnap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				snapshoot(textField.getText());
+				snapshootMD5(textField.getText());	
+  
+			}
+		});
+		btnSnap.setBounds(164, 88, 103, 21);
+		frame.getContentPane().add(btnSnap);
+		
+		JButton btnVer = new JButton("Verification");
+		btnVer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				verify(textField.getText());
+			}
+		});
+		btnVer.setBounds(300, 88, 85, 21);
+		frame.getContentPane().add(btnVer);
+		}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+	public static void snapshoot(String path) {
+		FileWriter writeFile = null;
+		String textToWrite = "";
+        try {
+            dirToOpen = new File(path);
+            
+            try {
+            	desktop.open(dirToOpen);
+				new File("Pathnames.txt");
+				writeFile = new FileWriter("Pathnames.txt");
+				
+				pathnames = dirToOpen.list();
+				for ( String i: pathnames) {
+					textToWrite = i;
+		           	writeFile.write(textToWrite+"\n");
+				}
+				
+				
+	            if (writeFile != null) {
+	            	writeFile.close();
+	            }
+	            
+			} catch (IOException e1) {
+				 System.out.println("File cannot be open");
+			}
+        } catch (IllegalArgumentException iae) {
+            System.out.println("File Not Found");
+        } 
+	}
+	
+	
+	public static void snapshootMD5(String path) {
+		FileWriter writeFile = null;
+		String textToWrite = "";
+		dirToOpen = new File(path);
+        
+        try {
+			new File("MD5.txt");
+			writeFile = new FileWriter("MD5.txt");
+			
+			pathnames = dirToOpen.list();
+			for ( String i: pathnames) {
+				textToWrite = i;
+	           	byte[] text = textToWrite.getBytes("UTF-8");
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				byte[] thedigest = md.digest(text);	
+				md.update(thedigest);
+				for(Byte x: thedigest) {
+				    writeFile.write(Integer.toHexString(x));
+				}
+				writeFile.write(",");
+			}
+			
+			
+            if (writeFile != null) {
+            	writeFile.close();
+            }
+            
+		} catch (IOException e1) {
+			 System.out.println("File cannot be open");
+		} catch (IllegalArgumentException iae) {
+        System.out.println("File Not Found");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		
+	}
+	
+	public static void verify(String path) {
+		dirToOpen = new File(path);
+        
+        try {
+        	
+		    try {
+		        File myObj = new File("MD5.txt");
+		        Scanner myReader = new Scanner(myObj);
+		        while (myReader.hasNextLine()) {
+		          String data = myReader.nextLine();
+		          dataFromFile.add(data);		          
+		        }
+		        myReader.close();
+		      } catch (FileNotFoundException e) {
+		        System.out.println("An error occurred.");
+		        e.printStackTrace();
+		      }
+		    
+			pathnames = dirToOpen.list();
+			int iteratorByte = 0;
+			for ( String i: pathnames) {
+	           	byte[] text = i.getBytes("UTF-8");
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				byte[] thedigest = md.digest(text);	
+				md.update(thedigest);
+				
+				for(Byte x: thedigest) {
+					System.out.println(Integer.toHexString(x)+"="+dataFromFile.get(iteratorByte)+"\n	");
+					if(Integer.toHexString(x) == dataFromFile.get(iteratorByte)){
+						iteratorByte++;
+					}
+					else {
+					JOptionPane.showMessageDialog(null, "File was modified");
+					break;
+					} 
+			}
+				iteratorByte++;
+			}
+		} catch (IOException e1) {
+			 System.out.println("File cannot be open");
+		} catch (IllegalArgumentException iae) {
+        System.out.println("File Not Found");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+	
+}
+	

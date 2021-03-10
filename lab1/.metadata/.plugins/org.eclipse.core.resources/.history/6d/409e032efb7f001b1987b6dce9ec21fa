@@ -1,0 +1,140 @@
+package example1;
+
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+public class Window {
+	protected JFrame frame;
+	protected JPanel panel;
+	private JTextField textField;
+	private static String[] pathnames = null;
+	private static FileWriter writeFile = null;
+	private static String textToWrite = "";
+	
+	private static Desktop desktop = Desktop.getDesktop();
+	private static File dirToOpen = null;
+    
+	public Window() { 
+		initialize();
+	}
+
+	private void initialize() {
+		setFrame(new JFrame());
+		
+		getFrame().setBounds(100, 100, 600, 400);
+		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		textField = new JTextField();
+		textField.setBounds(164, 50, 221, 28);
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
+		JButton btnSnap = new JButton("Snapshot");
+		btnSnap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				snapshoot(textField.getText());
+				snapshootMD5(textField.getText());	
+  
+			}
+		});
+		btnSnap.setBounds(164, 88, 85, 21);
+		frame.getContentPane().add(btnSnap);
+		
+		JButton btnVer = new JButton("Verification");
+		btnVer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnVer.setBounds(300, 88, 85, 21);
+		frame.getContentPane().add(btnVer);
+		}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+	public static void snapshoot(String path) {
+        try {
+            dirToOpen = new File(path);
+            
+            try {
+            	desktop.open(dirToOpen);
+				new File("Pathnames.txt");
+				writeFile = new FileWriter("Pathnames.txt");
+				
+				pathnames = dirToOpen.list();
+				int iterator = 0;
+				for ( String i: pathnames) {
+					textToWrite = pathnames[iterator];
+		           	writeFile.write(textToWrite);
+					iterator++;
+				}
+				
+				
+	            if (writeFile != null) {
+	            	writeFile.close();
+	            }
+	            
+			} catch (IOException e1) {
+				 System.out.println("File cannot be open");
+			}
+        } catch (IllegalArgumentException iae) {
+            System.out.println("File Not Found");
+        } 
+	}
+	public static void snapshootMD5(String path) {
+		
+		dirToOpen = new File(path);
+        
+        try {
+			new File("MD5.txt");
+			writeFile = new FileWriter("MD5.txt");
+			
+			pathnames = dirToOpen.list();
+			int iterator = 0;
+			for ( String i: pathnames) {
+				textToWrite = pathnames[iterator];
+				System.out.println(textToWrite);
+	           	byte[] text = textToWrite.getBytes("UTF-8");
+	           	System.out.println(text);
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				md.update(text);
+				byte[] thedigest = md.digest(text);	
+
+			    writeFile.write(thedigest.toString());
+				iterator++;
+			}
+			
+			
+            if (writeFile != null) {
+            	writeFile.close();
+            }
+            
+		} catch (IOException e1) {
+			 System.out.println("File cannot be open");
+		} catch (IllegalArgumentException iae) {
+        System.out.println("File Not Found");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		
+	}
+	
+}

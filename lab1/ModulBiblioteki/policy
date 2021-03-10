@@ -1,0 +1,7 @@
+/* AUTOMATICALLY GENERATED ON Mon Mar 08 18:18:59 CET 2021*/
+/* DO NOT EDIT */
+
+grant codeBase "https://docs.oracle.com/javase/tutorial/security/tour1/examples/" {
+  permission java.security.AllPermission;
+};
+
