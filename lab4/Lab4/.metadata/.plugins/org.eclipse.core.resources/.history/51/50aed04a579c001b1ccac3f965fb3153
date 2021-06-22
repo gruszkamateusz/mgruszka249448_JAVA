@@ -1,0 +1,28 @@
+package application;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class CustomClassLoader extends ClassLoader {
+    private Path searchPath;
+
+    public CustomClassLoader(Path path) {
+        if (!Files.isDirectory(path)) throw new IllegalArgumentException("Path must be a directory");
+        searchPath = path;
+    }
+
+    @Override
+	public Class<?> findClass(String fileName) throws ClassNotFoundException {
+        try {
+            Path filePath = Paths.get(searchPath + "\\" + fileName);
+            byte[] classBytes = Files.readAllBytes(filePath);
+            Class<?> cl = defineClass(null, classBytes, 0, classBytes.length);
+            return cl;
+        } catch (IOException e) {
+            throw new ClassNotFoundException(fileName);
+        }
+    }
+}
+

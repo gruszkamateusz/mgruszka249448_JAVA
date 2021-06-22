@@ -1,0 +1,17 @@
+package chat_lib_pack;
+
+/** Allows to listen incoming messages and connection state changes. */
+public interface ConnectionListener {
+	/**
+	 * Fired on connect and disconnect. Needed to notice connections made from 
+	 * the outside.
+	 */
+	void stateChanged();
+	
+	/**
+	 * Fired on message receiving.
+	 * 
+	 * @param rcvData - received data
+	 */
+	void messageReceived(byte[] rcvData, String host, int port);
+}

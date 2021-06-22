@@ -1,0 +1,34 @@
+package main;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class Main{
+	public static void main(String[] args){
+
+		Window window = new Window();
+		window.setVisible(true);
+		/*
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create("https://wft-geo-db.p.rapidapi.com/v1/geo/cities"))
+				.header("x-rapidapi-key", "ee0f1dfa9dmshb94c64fcd53b738p12ad47jsn9219613b9c91")
+				.header("x-rapidapi-host", "wft-geo-db.p.rapidapi.com")
+				.method("GET", HttpRequest.BodyPublishers.noBody())
+				.build();
+				HttpResponse<String> response;
+				try {
+				response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+				System.out.println(response.body());
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				*/
+	}
+
+}	

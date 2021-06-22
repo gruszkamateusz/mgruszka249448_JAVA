@@ -1,0 +1,111 @@
+package chat_lib_pack;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
+
+/** Allows receiving incoming data via TCP/IP socket. */
+public class Receiver {
+	/** List of listeners of incoming data. */
+	private List<ReceiverListener> listeners = new ArrayList<ReceiverListener>();
+	/** Main thread of receiver */
+	private Thread thread = null;
+	/** The port on which the receiver is listening. */
+	private int port = 0;
+	/** Server socket that accepts incoming connections. */
+	private ServerSocket srvSocket = null;
+	/** Flag is set true if main thread should end its work. */
+	private boolean end = false;
+	/** Flag is set true if main thread is running. */
+	private boolean running = false;
+
+	/**
+	 * Creates receiver.
+	 * 
+	 * @param port - number of port on which the receiver will be listening.
+	 */
+	public Receiver(int port) {
+		this.port = port;
+		end = false;
+		running = false;
+	}
+
+	/** Starts main thread of receiver. */
+	public void start() {
+		end = false;
+		if (running == true)
+			return;
+		running = true;
+		
+		thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					srvSocket = new ServerSocket(port);
+					while (end == false) {
+						Socket inSocket = srvSocket.accept();
+						InputStream is = inSocket.getInputStream();
+						byte[] rcvData = is.readAllBytes();
+						InetSocketAddress sockaddr = (InetSocketAddress)inSocket.getRemoteSocketAddress();
+						listeners.forEach(
+								(item) -> item.messageReceived(rcvData,
+										sockaddr.getAddress().getHostAddress(),
+										sockaddr.getPort()));
+						inSocket.close();
+						Thread.sleep(100);
+					}
+				} catch (SocketException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				running = false;
+			}
+		});
+		thread.start();
+	}
+
+	/** Starts main thread of receiver. */
+	public void stop() {
+		end = true;
+		thread.interrupt();
+		try {
+			if(srvSocket != null)
+				srvSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/** 
+	 * Check if Receiver is listening.
+	 */
+	public boolean isListening() {
+		return running;
+	}
+	
+	/**
+	 * Adds listener of incoming data.
+	 * 
+	 * @param lis - the listener
+	 */
+	public void addListener(ReceiverListener lis) {
+		listeners.add(lis);
+	}
+
+	/**
+	 * Removes listener of incoming data.
+	 * 
+	 * @param lis - the listener
+	 */
+	public void removeListener(ReceiverListener lis) {
+		listeners.remove(lis);
+	}
+}

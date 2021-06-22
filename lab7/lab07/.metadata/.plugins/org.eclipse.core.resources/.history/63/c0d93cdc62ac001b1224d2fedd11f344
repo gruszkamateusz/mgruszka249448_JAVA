@@ -1,0 +1,215 @@
+package isp_app_pack;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.Scrollable;
+import javax.swing.table.DefaultTableModel;
+
+import isp_app_pack.dao.Dao;
+
+import javax.swing.SpringLayout;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import javax.swing.ListSelectionModel;
+
+public class DataTablePane<T> extends JPanel {
+	private static final long serialVersionUID = -400061118324082052L;
+	private JScrollPane scrollPane;
+	private JTable dataTable;
+	private DefaultTableModel dataModel;
+	private JTable inputTable;
+	private DefaultTableModel inputModel;
+	private Dao<T> dao;
+	private JTextArea logs;
+	
+	public DataTablePane(JTextArea logsArea, Dao<T> newdao) {
+		logs = logsArea;
+		this.dao = newdao;
+		
+		
+		SpringLayout springLayout = new SpringLayout();
+		setLayout(springLayout);
+		scrollPane = new JScrollPane();
+		springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -120, SpringLayout.SOUTH, this);
+		add(scrollPane);
+		springLayout.putConstraint(SpringLayout.NORTH, scrollPane, 0, SpringLayout.NORTH, this);
+		springLayout.putConstraint(SpringLayout.WEST, scrollPane, 0, SpringLayout.WEST, this);
+		springLayout.putConstraint(SpringLayout.EAST, scrollPane, 0, SpringLayout.EAST, this);
+		
+		dataTable = new JTable();
+		dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane.setViewportView(dataTable);
+		dataModel = new DefaultTableModel();
+		dataModel.setColumnIdentifiers(dao.getColumnsIdentifiers());
+		dataTable.setModel(dataModel);
+		dataTable.setDefaultEditor(Object.class, null);
+		dataTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+//				inputTable.getCellEditor().stopCellEditing();
+				int idx = dataTable.getSelectedRow();
+				if (idx >= 0) {
+					Object[] ob = dataModel.getDataVector().get(idx).toArray();
+					for (int i = 0; i < inputModel.getColumnCount(); ++i)
+						inputModel.setValueAt(ob[i], 0, i);
+				}
+			}
+		});
+		
+		JScrollPane scrollPane2 = new JScrollPane();
+		add(scrollPane2);
+		springLayout.putConstraint(SpringLayout.WEST, scrollPane2, 0, SpringLayout.WEST, this);
+		springLayout.putConstraint(SpringLayout.EAST, scrollPane2, 0, SpringLayout.EAST, this);
+		
+		inputTable = new JTable();
+		inputModel = new DefaultTableModel();
+		inputModel.setColumnIdentifiers(dao.getColumnsIdentifiers());
+		inputModel.addRow(new Object[dao.getColumnsIdentifiers().length]);
+		inputTable.setModel(inputModel);
+		scrollPane2.setViewportView(inputTable);
+		
+		JLabel lblInputTable = new JLabel("Input:");
+		springLayout.putConstraint(SpringLayout.NORTH, scrollPane2, 4, SpringLayout.SOUTH, lblInputTable);
+		springLayout.putConstraint(SpringLayout.SOUTH, scrollPane2, 50, SpringLayout.SOUTH, lblInputTable);
+		springLayout.putConstraint(SpringLayout.WEST, lblInputTable, 10, SpringLayout.WEST, this);
+		springLayout.putConstraint(SpringLayout.EAST, lblInputTable, -10, SpringLayout.EAST, this);
+		add(lblInputTable);
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try{ inputTable.getCellEditor().stopCellEditing(); }
+				catch (Exception er) {}
+				
+				T oldObj = dao.get(Long.parseLong((String)inputModel.getValueAt(0, 0)));
+				
+				Object[] updatedObjTab = inputModel.getDataVector().get(0).toArray();
+				T newObj = dao.tableToInstance(updatedObjTab);
+				dao.update(newObj);
+				
+				for(int i = 0; i < dataModel.getRowCount(); ++i) {
+					if(Long.parseLong((String)dataModel.getValueAt(i, 0)) == 
+							Long.parseLong((String)updatedObjTab[0])) {
+						
+						logs.append("Update " + oldObj.toString() + " to " +
+								newObj.toString() + "\n");
+						dataModel.removeRow(i);
+						break;
+					}
+				}
+				dataModel.addRow(updatedObjTab);
+			}
+		});
+		add(btnUpdate);
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try{ inputTable.getCellEditor().stopCellEditing(); }
+				catch (Exception er) {}
+				dataTable.getSelectionModel().clearSelection();
+				Long idx = Long.parseLong((String)inputModel.getValueAt(0, 0));
+				T deltedObj = dao.get(idx);
+				if(dao.delete(idx) == false)
+					return;
+				for(int i = 0; i < dataModel.getRowCount(); ++i) {
+					if(Long.parseLong((String)dataModel.getValueAt(i, 0)) == idx) {
+						logs.append("Delete " + deltedObj.toString() + "\n");
+						dataModel.removeRow(i);
+						break;
+					}
+				}
+			}
+		});
+		springLayout.putConstraint(SpringLayout.NORTH, btnUpdate, 0, SpringLayout.NORTH, btnDelete);
+		springLayout.putConstraint(SpringLayout.WEST, btnUpdate, 10, SpringLayout.EAST, btnDelete);
+		springLayout.putConstraint(SpringLayout.EAST, btnUpdate, 100, SpringLayout.EAST, btnDelete);
+		add(btnDelete);
+		
+		JButton btnAdd = new JButton("Add");
+		springLayout.putConstraint(SpringLayout.NORTH, btnAdd, 6, SpringLayout.SOUTH, scrollPane2);
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try{ inputTable.getCellEditor().stopCellEditing(); }
+				catch (Exception er) {}
+				Object[] newObj = inputModel.getDataVector().get(0).toArray();
+				newObj[0] = Long.toString(dao.getNextId());
+				T addedObj = dao.tableToInstance(newObj); 
+				dao.add(addedObj);
+				logs.append("Add " + addedObj.toString() + "\n");
+				dataModel.addRow(newObj);
+			}
+		});
+		springLayout.putConstraint(SpringLayout.NORTH, btnDelete, 0, SpringLayout.NORTH, btnAdd);
+		springLayout.putConstraint(SpringLayout.WEST, btnDelete, 10, SpringLayout.EAST, btnAdd);
+		springLayout.putConstraint(SpringLayout.EAST, btnDelete, 100, SpringLayout.EAST, btnAdd);
+		springLayout.putConstraint(SpringLayout.WEST, btnAdd, 10, SpringLayout.WEST, this);
+		springLayout.putConstraint(SpringLayout.EAST, btnAdd, 100, SpringLayout.WEST, this);
+		add(btnAdd);
+		
+		JLabel lblInfo = new JLabel("Add (id unused) / Delete (only id used) / Update (all fields used)");
+		springLayout.putConstraint(SpringLayout.NORTH, lblInputTable, 5, SpringLayout.SOUTH, lblInfo);
+		springLayout.putConstraint(SpringLayout.NORTH, lblInfo, 5, SpringLayout.SOUTH, scrollPane);
+		springLayout.putConstraint(SpringLayout.WEST, lblInfo, 10, SpringLayout.WEST, this);
+		add(lblInfo);
+		
+		updateTable();
+	}	
+	
+	public void add(T object) {
+		dao.add(object);
+		logs.append("Add " + object.toString() + "\n");
+		dataModel.addRow(dao.instanceToTable(object));
+	}
+	
+	public void delete(T object) {
+		Object[] objTab = dao.instanceToTable(object);
+		long idx = Long.parseLong((String)objTab[0]);
+		if(dao.delete(idx) == false)
+			return;
+		for(int i = 0; i < dataModel.getRowCount(); ++i) {
+			if(Long.parseLong((String)dataModel.getValueAt(i, 0)) == idx) {
+				logs.append("Delete " + object.toString() + "\n");
+				dataModel.removeRow(i);
+				break;
+			}
+		}
+	}
+	
+	public void update(T object) {		
+		Object[] objTab = dao.instanceToTable(object);
+		long idx = Long.parseLong((String)objTab[0]);
+		dao.update(object);
+		
+		for(int i = 0; i < dataModel.getRowCount(); ++i) {
+			if(Long.parseLong((String)dataModel.getValueAt(i, 0)) == 
+					Long.parseLong((String)objTab[0])) {
+				
+				logs.append("Update " + object.toString() + "\n");
+				dataModel.removeRow(i);
+				break;
+			}
+		}
+		dataModel.addRow(objTab);
+	}
+	
+	public void updateTable() {
+		for(int i = 0; i < dataModel.getRowCount(); ++i) {
+			dataModel.removeRow(i);
+		}
+		List<T> list = dao.getAll();
+		dataModel.setColumnIdentifiers(dao.getColumnsIdentifiers());
+		for(int i = 0; i < list.size(); ++i) {
+			dataModel.addRow(dao.instanceToTable(list.get(i)));
+		}
+	}
+}

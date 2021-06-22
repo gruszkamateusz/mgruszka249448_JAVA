@@ -1,0 +1,48 @@
+package org.example.SoapISPService.soap;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+
+import org.example.SoapISPService.dao.ChargeDao;
+import org.example.SoapISPService.dao.ClientDao;
+import org.example.SoapISPService.dao.InstallationDao;
+import org.example.SoapISPService.dao.TariffDao;
+import org.example.SoapISPService.model.Charge;
+import org.example.SoapISPService.model.Client;
+import org.example.SoapISPService.model.Installation;
+import org.example.SoapISPService.model.Tariff;
+
+@WebService(endpointInterface = "org.example.SoapISPService.soap.ClientSoapInt")
+public class ClientSoapImpl implements ClientSoapInt {
+	@PostConstruct
+	private void init() {
+		ClientDao.createTable();
+	}
+	
+	
+	@WebMethod
+	public Client createClient(String name, String firstName) {
+		Client cl = new Client(-1, name, firstName);
+		cl.setId(ClientDao.insert(cl));
+		return cl;
+	}
+
+	@WebMethod
+	public int removeClient(long clientId) {
+		return ClientDao.delete(clientId);
+	}
+
+	@WebMethod
+	public Client getClient(long clientId) {
+		return ClientDao.get(clientId);
+	}
+	
+	@WebMethod
+	public List<Client> getAllClients() {
+		return ClientDao.getAll();
+	}
+}

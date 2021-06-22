@@ -36,5 +36,4 @@ public class Window {
 		this.frame = frame;
 		frame.setResizable(false);
 	}
-
 }

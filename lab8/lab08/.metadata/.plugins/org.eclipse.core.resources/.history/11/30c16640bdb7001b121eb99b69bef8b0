@@ -1,0 +1,60 @@
+package org.example.SoapISPService.soap;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+
+import org.example.SoapISPService.dao.ChargeDao;
+import org.example.SoapISPService.model.Charge;
+
+@WebService(endpointInterface = "org.example.SoapISPService.soap.ChargeSoapInt")
+public class ChargeSoapImpl implements ChargeSoapInt {
+	@PostConstruct
+	private void init() {
+		System.out.println("In ChargeSoapImpl init");
+		ChargeDao.createTable();
+	}
+
+	@WebMethod
+	public Charge createCharge(long installationId, String date, double amount) {
+		Charge ch = new Charge(-1, installationId, date, amount);
+		ch.setId(ChargeDao.insert(ch));
+		return ch;
+	}
+
+	@WebMethod
+	public int removeCharge(long installationId) {
+		return ChargeDao.delete(installationId);
+	}
+
+	@WebMethod
+	public Charge getCharge(long installationId) {
+		return ChargeDao.get(installationId);
+	}
+
+	@WebMethod
+	public List<Charge> getAllCharges() {
+		return ChargeDao.getAll();
+	}
+
+	@WebMethod
+	public List<Charge> getAllChargesOfInstall(long installId) {
+		return ChargeDao.getAllOfInstallCharges(installId);
+	}
+	
+
+	@WebMethod
+	public List<Charge> getChargesOfClient(long clientId, String beginDate, 
+			String endDate) {
+		return ChargeDao.getChargesOfClient(clientId, LocalDate.parse(beginDate), 
+				LocalDate.parse(endDate));
+	}
+
+	@WebMethod
+	public String getCurrentDate() {
+		return LocalDate.now().toString();
+	}
+}

@@ -1,0 +1,223 @@
+package chat_lib_pack;
+
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+
+class DataFrame {
+	public byte[] data;
+	public String host;
+	public int port;
+}
+
+
+public class SecureConnection implements ReceiverListener {
+	private List<ConnectionListener> listeners = new ArrayList<ConnectionListener>();
+	private List<DataFrame> msgBuffer = new ArrayList<DataFrame>();
+	private AsymmetricCryptor myCryptor;
+	private AsymmetricCryptor otherCryptor;
+	private Sender sender;
+	private Receiver receiver;
+	private int rcvPort;
+	private boolean end = false;
+	private boolean running = false;
+	private Thread thread;
+	private String otherHost;
+	private int otherPort;
+
+
+	public SecureConnection(int rcvPort) {
+		this.rcvPort = rcvPort;
+		myCryptor = null;
+		otherCryptor = null;
+		sender = new Sender();
+		receiver = new Receiver(this.rcvPort);
+		receiver.addListener(this);
+	}
+
+	public void start() {
+		end = false;
+		if (running == true)
+			return;
+		receiver.start();
+		running = true;
+
+		thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (end == false) {
+					while (msgBuffer.size() == 0) {
+						try {
+							Thread.sleep(100);
+							if(receiver.isListening() == false) {
+								onEnd();
+								return;
+							}
+						} catch (InterruptedException e) {
+							onEnd();
+							return;
+						}
+					}
+					receiveMessage();
+				}
+				onEnd();
+			}
+			
+			private void onEnd() {
+				running = false;
+				listeners.forEach((item) -> item.stateChanged());
+			}
+		});
+		listeners.forEach((item) -> item.stateChanged());
+		thread.start();
+	}
+
+	public void stop() {
+		receiver.stop();
+		end = true;
+		thread.interrupt();
+	}
+
+	private void receiveMessage() {
+		DataFrame frame = msgBuffer.remove(0);
+		byte[] data = Base64.getDecoder().decode(frame.data);
+		JSONObject jsonObject = new JSONObject(new String(data));
+
+		if (jsonObject.has("public_key") && otherCryptor == null) {
+			JSONArray keyJson = jsonObject.getJSONArray("public_key");
+			byte[] pubKey = new byte[keyJson.length()];
+			for (int i = 0; i < keyJson.length(); ++i) {
+				pubKey[i] = (byte) ((Integer) keyJson.get(i)).intValue();
+			}
+			pubKey = Base64.getDecoder().decode(pubKey);
+			setOtherPublicKey(pubKey);
+
+			if (otherHost == null) {
+				try {
+					int lis_port = jsonObject.getInt("port");
+					connect(frame.host, lis_port);
+				} catch (Exception e) {
+					e.printStackTrace();
+					disconnect();
+				}
+			}
+			return;
+		}
+
+		if (jsonObject.has("msg")) {
+			try {
+				byte[] msg = myCryptor.decrypt(Base64.getDecoder()
+						.decode(jsonObject.getString("msg")));
+				listeners.forEach((item) -> item.messageReceived(msg,
+						frame.host, frame.port));
+			} catch (InvalidKeyException | IllegalBlockSizeException
+					| BadPaddingException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void messageReceived(byte[] rcvData, String host, int port) {
+		DataFrame frame = new DataFrame();
+		frame.data = rcvData;
+		frame.host = host;
+		frame.port = port;
+		msgBuffer.add(frame);
+	}
+
+	public void connect(String host, int port) throws IOException {
+		start();
+		this.otherHost = host;
+		this.otherPort = port;
+		myCryptor = new AsymmetricCryptor();
+		myCryptor.generateKeys(1024);
+
+		JSONObject jsonOb = new JSONObject();
+		byte[] key = Base64.getEncoder()
+				.encode(myCryptor.getPublicKey().getEncoded());
+		jsonOb.put("public_key", key);
+		jsonOb.put("port", rcvPort);
+		try {
+			sendRaw(jsonOb.toString().getBytes());
+			listeners.forEach((item) -> item.stateChanged());
+		} catch (IOException e) {
+			disconnect();
+			throw e;
+		}
+	}
+
+	public void disconnect() {
+		this.otherHost = null;
+		this.otherPort = 0;
+		myCryptor = null;
+		listeners.forEach((item) -> item.stateChanged());
+	}
+
+	private void sendRaw(byte[] data)
+			throws UnknownHostException, IOException {
+		data = Base64.getEncoder().encode(data);
+		sender.send(data, otherHost, otherPort);
+	}
+
+	public void send(String msg) throws UnknownHostException, IOException {
+		if (otherCryptor != null) {
+			JSONObject jsonOb = new JSONObject();
+			try {
+				msg = Base64.getEncoder()
+						.encodeToString(otherCryptor.encrypt(msg.getBytes()));
+				jsonOb.put("msg", msg);
+				sendRaw(jsonOb.toString().getBytes());
+			} catch (InvalidKeyException | IllegalBlockSizeException
+					| BadPaddingException e) {
+				disconnect();
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void setOtherPublicKey(byte[] publicKey) {
+		otherCryptor = new AsymmetricCryptor();
+		try {
+			otherCryptor.setEncodedPublicKey(publicKey);
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException
+				| JSONException e) {
+			otherCryptor = null;
+			e.printStackTrace();
+		}
+	}
+
+
+	public boolean isListening() {
+		return running;
+	}
+
+	public boolean isConnected() {
+		return otherHost != null;
+	}
+
+	public void addListener(ConnectionListener lis) {
+		listeners.add(lis);
+	}
+
+	public void removeListener(ConnectionListener lis) {
+		listeners.remove(lis);
+	}
+
+	@Override
+	public void stateChanged() {
+		if(receiver.isListening() == false)
+			stop();
+		listeners.forEach((item) -> item.stateChanged());
+	}
+}

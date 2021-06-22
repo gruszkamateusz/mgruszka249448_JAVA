@@ -1,0 +1,19 @@
+package org.example.SoapISPService.soap;
+
+import java.util.List;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import org.example.SoapISPService.model.Client;
+
+@WebService
+public interface ClientSoapInt {
+	@WebMethod public void insertTestData();
+	
+	@WebMethod public Client createClient(String name, String firstName);
+	
+	@WebMethod public int removeClient(long clientId);
+	
+	@WebMethod public Client getClient(long clientId);
+
+	@WebMethod public List<Client> getAllClients();
+}

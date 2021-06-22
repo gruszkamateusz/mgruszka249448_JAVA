@@ -1,0 +1,85 @@
+package controllers;
+
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import application.CustomClassLoader;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import processing.StatusListener;
+import processing.Status;
+/**
+ * Klasa odpowiedzialna za oblsuge glownego okna aplikacji
+ **/
+
+public class MainController {
+	private Status status = new Status("",0);
+	private StatusListener statusListener;
+    @FXML
+    private TextArea inputDataTextArea;
+    @FXML
+    private TextArea outputDataTextArea;
+    @FXML
+    private TextArea librariesArea;
+    @FXML
+    private TextField test;
+    @FXML
+    private ComboBox comboBoxKlasy;
+    
+    @FXML
+	private Button btn;
+    private String[] klasy = { "ProcessorA","ProcessorB","ProcessorC"};
+
+
+	public void initialize() {
+		setUpAllTexts();
+	}
+    public void btnActionHandler(ActionEvent event) throws IOException {
+    	
+    	String textPath = "C:\\Users\\huawei\\git\\Lab4\\"+klasy[comboBoxKlasy.getSelectionModel().getSelectedIndex()]+"\\bin";
+    	Path path = Paths.get(textPath);
+        CustomClassLoader cl = new CustomClassLoader(path);
+        try {
+            Class<?> c = cl.findClass("processor\\"+klasy[comboBoxKlasy.getSelectionModel().getSelectedIndex()]);
+            
+            Method m = c.getMethod("getInfo");
+            Object o = c.getDeclaredConstructor().newInstance();
+            librariesArea.setText((String) m.invoke(o));
+
+            Method m1 = c.getMethod("submitTask",String.class, StatusListener.class);
+            Object o1 = c.getDeclaredConstructor().newInstance();
+            m1.invoke(o1,inputDataTextArea.getText(),statusListener);
+            
+            Method m2 = c.getMethod("run");
+            Object o2 = c.getDeclaredConstructor().newInstance();
+            m2.invoke(o2);
+            
+            Method m3 = c.getMethod("getResult");
+            Object o3 = c.getDeclaredConstructor().newInstance();
+            Object Object = m3.invoke(o3);
+            
+            if(Object != null) {
+            	outputDataTextArea.setText((String) Object);
+            }
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        
+    	
+	}
+    private void setUpAllTexts() {
+    	
+    comboBoxKlasy.getItems().setAll(klasy);
+    
+    }
+
+}

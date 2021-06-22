@@ -1,0 +1,42 @@
+package processor;
+
+import processing.Processor;
+import processing.Status;
+import processing.StatusListener;
+
+
+public class ProcessorA implements Processor, Runnable {
+	private String input;
+    private String result;
+    private StatusListener statusListener;
+
+    @Override
+    public boolean submitTask(String s, StatusListener statusListener) {
+        this.statusListener = statusListener;
+        input = s;
+        result = "";
+        return true;
+    }
+
+    @Override
+    public String getInfo() {
+        return "Info about processingA.UpperCaseProcessor";
+    }
+
+    @Override
+    public String getResult() {
+        return result;
+    }
+
+    public void run() {
+    	if(input == null) {
+    	}
+    	else {
+            for(int i = 0; i < input.length(); ++i) {
+                result += Character.toUpperCase(input.charAt(i));
+            }
+    	}
+
+    	}
+}
+

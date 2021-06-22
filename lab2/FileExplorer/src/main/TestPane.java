@@ -26,18 +26,23 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class TestPane extends JPanel {
 
     private DefaultTreeModel model;
     private JTree tree;
     private String pathname = "";
-    private ArrayList<String> oldPathnames;
-    private String oldPathname = "";
+    private String previousPathname = "";
+    private String previousPathname2 = "";
     private String rootpath = "C:\\Users\\huawei\\Desktop\\Test";
     WeakReference<ImageIcon> weakReferenceImage;
+    WeakReference<ImageIcon> weakReferenceImage2;
     WeakReference<String> weakReferenceText;
+    WeakReference<String> weakReferenceText2;
     ImageIcon image;
+    private JTextField textIsWeakReference;
     public TestPane() {
     	
         JPanel panel = new JPanel();
@@ -61,7 +66,7 @@ public class TestPane extends JPanel {
         	 
             public void valueChanged(TreeSelectionEvent e) {
             	
-            	
+            	int iterator =  0;
                TreePath tp = e.getNewLeadSelectionPath();
                if (tp != null)	   	
                pathname = tp.getLastPathComponent().toString();
@@ -74,10 +79,10 @@ public class TestPane extends JPanel {
                 	   
                 	   panel.removeAll();
                 	   panel.repaint();
-                	   
-                	   if(pathname.equals(oldPathname)) {
-                		   everything = weakReferenceText.get();
-                		   System.out.println("WeakTxt");
+
+                	   if(pathname.equals(previousPathname2)) {
+                		   everything = weakReferenceText2.get();
+                		   textIsWeakReference.setText("Weak reference!!");
                 	   }
                 	   else {
 
@@ -103,8 +108,13 @@ public class TestPane extends JPanel {
                 	   		}catch(Exception e4) {
                 		   
                 	   		}
+            		   	textIsWeakReference.setText("It's not weak reference");
+            		   	
                 	   }
+                	   
+
                 	   weakReferenceText = new WeakReference<String>(everything);
+                	   
                 	   JLabel label = new JLabel(everything, JLabel.CENTER);
                 	   panel.add(label);
                    }
@@ -114,20 +124,28 @@ public class TestPane extends JPanel {
                 	   panel.removeAll();
                 	   panel.repaint();
                 	   
-                	   if(pathname.equals(oldPathname)) {
-                		   image = weakReferenceImage.get();
+                	   if(pathname.equals(previousPathname2)) {
+                		   image = weakReferenceImage2.get();
+                		   textIsWeakReference.setText("Weak reference!!");
                 	   }
                 	   else {
-                		   ;
                     	   image = new ImageIcon(fPath, null);
+                    	   textIsWeakReference.setText("It's not weak reference");
                 	   }
-                	   weakReferenceImage = new WeakReference<ImageIcon>(image);
+                    	   weakReferenceImage2 = weakReferenceImage;
+                    	   weakReferenceImage = new WeakReference<ImageIcon>(image);
+
+
                 	   JLabel label = new JLabel(image, JLabel.CENTER);
                 	   panel.add(label);
                 	   
                    }
                }
-               oldPathname = pathname;
+               
+               if(!previousPathname.equals(null)) {
+                   previousPathname2 = previousPathname;
+               }
+               previousPathname = pathname;
                pathname = "";
             }
          });
@@ -136,8 +154,15 @@ public class TestPane extends JPanel {
         add(scrollPane);
 
         JButton load = new JButton("Load");
-        load.setBounds(195, 269, 84, 21);
+        load.setBounds(64, 269, 84, 21);
         add(load);
+        
+        textIsWeakReference = new JTextField();
+        textIsWeakReference.setHorizontalAlignment(SwingConstants.CENTER);
+        textIsWeakReference.setEditable(false);
+        textIsWeakReference.setBounds(259, 270, 180, 19);
+        add(textIsWeakReference);
+        textIsWeakReference.setColumns(10);
         
 
         load.addActionListener(new ActionListener() {
@@ -174,21 +199,21 @@ public class TestPane extends JPanel {
         }
 
     }
-    /*private void rememberFile( ArrayList<String> oldPathnames, String toAdd ){
+    /*private void rememberFile( ArrayList<String> previousPathnames, String toAdd ){
     	
-    	if(oldPathnames.size()<3) {
-        	for(String i : oldPathnames) {
+    	if(previousPathnames.size()<3) {
+        	for(String i : previousPathnames) {
         		if(i.equals(toAdd)) {
         			break;
         		}
         		else {
-        			oldPathnames.add(toAdd);
+        			previousPathnames.add(toAdd);
         		}
         	}
     	}
     	else {
-    		oldPathnames.remove(1);
-    		oldPathnames.add(toAdd);
+    		previousPathnames.remove(1);
+    		previousPathnames.add(toAdd);
     	}
 
     }

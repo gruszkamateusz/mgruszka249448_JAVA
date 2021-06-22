@@ -1,0 +1,130 @@
+package isp_app_pack;
+
+import java.awt.Dimension;
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+
+import isp_app_pack.dao.ChargeDao;
+import isp_app_pack.dao.ClientDao;
+import isp_app_pack.dao.InstallationDao;
+import isp_app_pack.dao.PaymentDao;
+import isp_app_pack.dao.TariffDao;
+import isp_app_pack.model.Charge;
+import isp_app_pack.model.Client;
+import isp_app_pack.model.Installation;
+import isp_app_pack.model.Payment;
+import isp_app_pack.model.Tariff;
+
+public class MainWindow extends JFrame {
+	private static final long serialVersionUID = 2771194675508602838L;
+	private boolean end;
+	private ClientDao clientDao;
+	private ChargeDao chargeDao;
+	private TariffDao tariffDao;
+	private InstallationDao installDao;
+	private PaymentDao paymentDao;
+	private LocalDate currentDate;
+
+	public MainWindow() {
+		end = false;
+		setTitle("ISP Admin");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocation(300, 300);
+		setSize(520, 501);
+		setPreferredSize(new Dimension(300, 300));
+		setMinimumSize(new Dimension(300, 300));
+
+		clientDao = new ClientDao();
+		tariffDao = new TariffDao();
+		installDao = new InstallationDao(clientDao, tariffDao);
+		chargeDao = new ChargeDao(installDao);
+		paymentDao = new PaymentDao(chargeDao);
+
+		clientDao.createTable();
+		chargeDao.createTable();
+		tariffDao.createTable();
+		installDao.createTable();
+		paymentDao.createTable();
+
+		JTabbedPane tabPane = new JTabbedPane();
+		getContentPane().add(tabPane);
+
+		if(clientDao.dbIsEmpty())
+			addTestData();
+		
+		DataTablePane<Client> clientPane = new DataTablePane<Client>(clientDao);
+		DataTablePane<Charge> chargePane = new DataTablePane<Charge>(chargeDao);
+		DataTablePane<Tariff> tariffPane = new DataTablePane<Tariff>(tariffDao);
+		DataTablePane<Installation> installPane = new DataTablePane<Installation>(installDao);
+		DataTablePane<Payment> paymentPane = new DataTablePane<Payment>(paymentDao);
+
+		tabPane.add("Clients", clientPane);
+		tabPane.add("Installations", installPane);
+		tabPane.add("Charges", chargePane);
+		tabPane.add("Payments", paymentPane);
+		tabPane.add("Tariffs", tariffPane);
+	}
+
+	public void addTestData() {
+		Client cl0 = new Client("Anastazja", "Grzybek");
+		Client cl1 = new Client("Anna", "Dusigrosz");
+		Client cl2 = new Client("Adam", "Kowalski");
+		Client cl3 = new Client("Bartłomiej", "Kuchcik");
+		Client cl4 = new Client("Barbara", "Kwiatek");
+		Client cl5 = new Client("Eliza", "Cieśla");
+		clientDao.add(cl0);
+		clientDao.add(cl1);
+		clientDao.add(cl2);
+		clientDao.add(cl3);
+		clientDao.add(cl4);
+		clientDao.add(cl5);
+		Tariff tar0 = new Tariff("limitowany 1GB", 9.99);
+		Tariff tar1 = new Tariff("limitowany 10GB", 19.99);
+		Tariff tar2 = new Tariff("limitowany 100GB", 29.99);
+		Tariff tar3 = new Tariff("bez limitu 5MB/s", 39.99);
+		Tariff tar4 = new Tariff("bez limitu 10MB/s", 49.99);
+		Tariff tar5 = new Tariff("limitowany 50MB/s", 59.99);
+		tariffDao.add(tar0);
+		tariffDao.add(tar1);
+		tariffDao.add(tar2);
+		tariffDao.add(tar3);
+		tariffDao.add(tar4);
+		tariffDao.add(tar5);		
+		Installation ins0 = new Installation(cl0, "Owocowa 1", tar0);
+		Installation ins1 = new Installation(cl1, "Truskawkowa 12", tar1);
+		Installation ins2 = new Installation(cl2, "Brzoskwiniowa 123", tar2);
+		Installation ins3 = new Installation(cl3, "Fikcyjna 1234", tar3);
+		Installation ins4 = new Installation(cl4, "Filmowa 11", tar4);
+		Installation ins5 = new Installation(cl5, "Czekoladowa 23", tar5);
+		Installation ins6 = new Installation(cl5, "Mleczna 45", tar2);
+		installDao.add(ins0);
+		installDao.add(ins1);
+		installDao.add(ins2);
+		installDao.add(ins3);
+		installDao.add(ins4);
+		installDao.add(ins5);
+		installDao.add(ins6);
+		Charge ch0 = new Charge(ins0, currentDate.plusDays(10), tar0.getPrice());
+		Charge ch1 = new Charge(ins1, currentDate.plusDays(20), tar1.getPrice());
+		Charge ch2 = new Charge(ins2, currentDate.plusDays(30), tar2.getPrice());
+		Charge ch3 = new Charge(ins3, currentDate.plusDays(40), tar3.getPrice());
+		Charge ch4 = new Charge(ins4, currentDate.plusDays(15), tar4.getPrice());
+		Charge ch5 = new Charge(ins5, currentDate.plusDays(25), tar5.getPrice());
+		Charge ch6 = new Charge(ins6, currentDate.plusDays(60), tar2.getPrice());
+		chargeDao.add(ch0);
+		chargeDao.add(ch1);
+		chargeDao.add(ch2);
+		chargeDao.add(ch3);
+		chargeDao.add(ch4);
+		chargeDao.add(ch5);
+		chargeDao.add(ch6);
+	}
+	
+	public static void main(String[] args) {
+		MainWindow window = new MainWindow();
+		window.setVisible(true);
+	}
+}

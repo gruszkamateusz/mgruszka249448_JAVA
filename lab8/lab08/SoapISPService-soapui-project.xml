@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="ab79dc63-fee4-4973-a114-be3af335faca" activeEnvironment="Default" name="SoapISPService" resourceRoot="" soapui-version="5.6.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="af96a1fd-72a7-45d2-9903-d0a541a4122d" wsaVersion="NONE" name="HelloWorldImplServiceSoapBinding" type="wsdl" bindingName="{http://SoapISPService.example.org/}HelloWorldImplServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/SoapISPService/HelloWorld?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/SoapISPService/HelloWorld?wsdl"><con:part><con:url>http://localhost:8080/SoapISPService/HelloWorld?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="HelloWorldImplService" targetNamespace="http://SoapISPService.example.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://SoapISPService.example.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http">
+  <wsdl:types>
+    <xs:schema elementFormDefault="unqualified" targetNamespace="http://SoapISPService.example.org/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="sayHi" type="tns:sayHi"/>
+      <xs:element name="sayHiResponse" type="tns:sayHiResponse"/>
+      <xs:complexType name="sayHi">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="sayHiResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="sayHi">
+    <wsdl:part element="tns:sayHi" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHiResponse">
+    <wsdl:part element="tns:sayHiResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="HelloWorld">
+    <wsdl:operation name="sayHi">
+      <wsdl:input message="tns:sayHi" name="sayHi"></wsdl:input>
+      <wsdl:output message="tns:sayHiResponse" name="sayHiResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="HelloWorldImplServiceSoapBinding" type="tns:HelloWorld">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="sayHi">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="sayHi">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sayHiResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HelloWorldImplService">
+    <wsdl:port binding="tns:HelloWorldImplServiceSoapBinding" name="HelloWorldImplPort">
+      <soap:address location="http://localhost:8080/SoapISPService/HelloWorld"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/SoapISPService/HelloWorld</con:endpoint></con:endpoints><con:operation id="cd62943c-9529-4e0e-9ef3-9064a29b8602" isOneWay="false" action="" name="sayHi" bindingOperationName="sayHi" type="Request-Response" outputName="sayHiResponse" inputName="sayHi" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="a0ed871b-35a0-4fc7-aa52-cece8de5237c" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/SoapISPService/HelloWorld</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://SoapISPService.example.org/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <soap:sayHi>\r
+         <!--Optional:-->\r
+         <arg0>"Duppppa"</arg0>\r
+      </soap:sayHi>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://SoapISPService.example.org/HelloWorld/sayHi"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" id="c153f3c7-d216-45c4-b9b3-f7fa85e0577b" wsaVersion="NONE" name="ClientSoapImplServiceSoapBinding" type="wsdl" bindingName="{http://soap.SoapISPService.example.org/}ClientSoapImplServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/SoapISPService/Client?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/SoapISPService/Client?wsdl"><con:part><con:url>http://localhost:8080/SoapISPService/Client?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="ClientSoapImplService" targetNamespace="http://soap.SoapISPService.example.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://soap.SoapISPService.example.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http">
+  <wsdl:types>
+    <xs:schema elementFormDefault="unqualified" targetNamespace="http://soap.SoapISPService.example.org/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="createClient" type="tns:createClient"/>
+      <xs:element name="createClientResponse" type="tns:createClientResponse"/>
+      <xs:element name="createInstallation" type="tns:createInstallation"/>
+      <xs:element name="createInstallationResponse" type="tns:createInstallationResponse"/>
+      <xs:element name="getAllCharges" type="tns:getAllCharges"/>
+      <xs:element name="getAllChargesResponse" type="tns:getAllChargesResponse"/>
+      <xs:element name="getAllClients" type="tns:getAllClients"/>
+      <xs:element name="getAllClientsResponse" type="tns:getAllClientsResponse"/>
+      <xs:element name="getAllInstallationsOfClient" type="tns:getAllInstallationsOfClient"/>
+      <xs:element name="getAllInstallationsOfClientResponse" type="tns:getAllInstallationsOfClientResponse"/>
+      <xs:element name="removeClient" type="tns:removeClient"/>
+      <xs:element name="removeClientResponse" type="tns:removeClientResponse"/>
+      <xs:element name="removeInstallation" type="tns:removeInstallation"/>
+      <xs:element name="removeInstallationResponse" type="tns:removeInstallationResponse"/>
+      <xs:complexType name="removeInstallation">
+        <xs:sequence>
+          <xs:element name="arg0" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="removeInstallationResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createClient">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+          <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createClientResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="removeClient">
+        <xs:sequence>
+          <xs:element name="arg0" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="removeClientResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createInstallation">
+        <xs:sequence>
+          <xs:element name="arg0" type="xs:long"/>
+          <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+          <xs:element name="arg2" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createInstallationResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getAllCharges">
+        <xs:sequence>
+          <xs:element name="arg0" type="xs:long"/>
+          <xs:element minOccurs="0" name="arg1" type="tns:localDate"/>
+          <xs:element minOccurs="0" name="arg2" type="tns:localDate"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType final="extension restriction" name="localDate">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="getAllChargesResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:charge"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="charge">
+        <xs:sequence>
+          <xs:element name="amount" type="xs:double"/>
+          <xs:element minOccurs="0" name="date" type="tns:localDate"/>
+          <xs:element name="id" type="xs:long"/>
+          <xs:element name="installationId" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getAllClients">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="getAllClientsResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:client"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="client">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="firstName" type="xs:string"/>
+          <xs:element name="id" type="xs:long"/>
+          <xs:element minOccurs="0" name="name" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getAllInstallationsOfClient">
+        <xs:sequence>
+          <xs:element name="arg0" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getAllInstallationsOfClientResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:installation"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="installation">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="address" type="xs:string"/>
+          <xs:element name="clientId" type="xs:long"/>
+          <xs:element name="tariffId" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="removeInstallation">
+    <wsdl:part element="tns:removeInstallation" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createClient">
+    <wsdl:part element="tns:createClient" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllCharges">
+    <wsdl:part element="tns:getAllCharges" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllClients">
+    <wsdl:part element="tns:getAllClients" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeClientResponse">
+    <wsdl:part element="tns:removeClientResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeClient">
+    <wsdl:part element="tns:removeClient" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllInstallationsOfClientResponse">
+    <wsdl:part element="tns:getAllInstallationsOfClientResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createClientResponse">
+    <wsdl:part element="tns:createClientResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createInstallation">
+    <wsdl:part element="tns:createInstallation" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllChargesResponse">
+    <wsdl:part element="tns:getAllChargesResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllClientsResponse">
+    <wsdl:part element="tns:getAllClientsResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeInstallationResponse">
+    <wsdl:part element="tns:removeInstallationResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllInstallationsOfClient">
+    <wsdl:part element="tns:getAllInstallationsOfClient" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createInstallationResponse">
+    <wsdl:part element="tns:createInstallationResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ClientSoapInt">
+    <wsdl:operation name="removeInstallation">
+      <wsdl:input message="tns:removeInstallation" name="removeInstallation"></wsdl:input>
+      <wsdl:output message="tns:removeInstallationResponse" name="removeInstallationResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createClient">
+      <wsdl:input message="tns:createClient" name="createClient"></wsdl:input>
+      <wsdl:output message="tns:createClientResponse" name="createClientResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeClient">
+      <wsdl:input message="tns:removeClient" name="removeClient"></wsdl:input>
+      <wsdl:output message="tns:removeClientResponse" name="removeClientResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createInstallation">
+      <wsdl:input message="tns:createInstallation" name="createInstallation"></wsdl:input>
+      <wsdl:output message="tns:createInstallationResponse" name="createInstallationResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllCharges">
+      <wsdl:input message="tns:getAllCharges" name="getAllCharges"></wsdl:input>
+      <wsdl:output message="tns:getAllChargesResponse" name="getAllChargesResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllClients">
+      <wsdl:input message="tns:getAllClients" name="getAllClients"></wsdl:input>
+      <wsdl:output message="tns:getAllClientsResponse" name="getAllClientsResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllInstallationsOfClient">
+      <wsdl:input message="tns:getAllInstallationsOfClient" name="getAllInstallationsOfClient"></wsdl:input>
+      <wsdl:output message="tns:getAllInstallationsOfClientResponse" name="getAllInstallationsOfClientResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ClientSoapImplServiceSoapBinding" type="tns:ClientSoapInt">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="removeInstallation">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="removeInstallation">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeInstallationResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createClient">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createClient">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createClientResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeClient">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="removeClient">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeClientResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createInstallation">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createInstallation">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createInstallationResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllCharges">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllCharges">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllChargesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllClients">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllClients">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllClientsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllInstallationsOfClient">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllInstallationsOfClient">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllInstallationsOfClientResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ClientSoapImplService">
+    <wsdl:port binding="tns:ClientSoapImplServiceSoapBinding" name="ClientSoapImplPort">
+      <soap:address location="http://localhost:8080/SoapISPService/Client"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/SoapISPService/Client</con:endpoint></con:endpoints><con:operation id="73d26150-7bee-4775-8f5b-13e361e9202d" isOneWay="false" action="" name="createClient" bindingOperationName="createClient" type="Request-Response" outputName="createClientResponse" inputName="createClient" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="1c76f696-6b4d-45da-b8bb-69f43f685485" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/SoapISPService/Client</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.SoapISPService.example.org/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <soap:createClient>\r
+         <!--Optional:-->\r
+         <arg0>aaaaa</arg0>\r
+         <!--Optional:-->\r
+         <arg1>nbbbbb</arg1>\r
+      </soap:createClient>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.SoapISPService.example.org/ClientSoapInt/createClient"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="e7a8143d-e9df-4fd2-b916-a376e9d911dd" isOneWay="false" action="" name="createInstallation" bindingOperationName="createInstallation" type="Request-Response" outputName="createInstallationResponse" inputName="createInstallation" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="708fafc2-6a48-49ca-a9d8-71fc42f469a9" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/SoapISPService/Client</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.SoapISPService.example.org/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <soap:createInstallation>\r
+         <arg0>?</arg0>\r
+         <!--Optional:-->\r
+         <arg1>?</arg1>\r
+         <arg2>?</arg2>\r
+      </soap:createInstallation>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.SoapISPService.example.org/ClientSoapInt/createInstallation"/></con:call></con:operation><con:operation id="774e573f-852f-4ffd-ac3e-eb2d334f1ffd" isOneWay="false" action="" name="getAllCharges" bindingOperationName="getAllCharges" type="Request-Response" outputName="getAllChargesResponse" inputName="getAllCharges" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="ec2435d7-8395-4cd1-9b7e-75119ddf657a" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/SoapISPService/Client</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.SoapISPService.example.org/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <soap:getAllCharges>\r
+         <arg0>?</arg0>\r
+         <!--Optional:-->\r
+         <arg1/>\r
+         <!--Optional:-->\r
+         <arg2/>\r
+      </soap:getAllCharges>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.SoapISPService.example.org/ClientSoapInt/getAllCharges"/></con:call></con:operation><con:operation id="7c552f16-7721-44dd-bdfd-93e6f6934a1a" isOneWay="false" action="" name="getAllClients" bindingOperationName="getAllClients" type="Request-Response" outputName="getAllClientsResponse" inputName="getAllClients" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="24c4b93a-8577-4f32-b912-79b0034ac732" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/SoapISPService/Client</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.SoapISPService.example.org/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <soap:getAllClients/>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.SoapISPService.example.org/ClientSoapInt/getAllClients"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="9aeca1a3-9514-4791-b9d0-0082e87dadb4" isOneWay="false" action="" name="getAllInstallationsOfClient" bindingOperationName="getAllInstallationsOfClient" type="Request-Response" outputName="getAllInstallationsOfClientResponse" inputName="getAllInstallationsOfClient" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="abe37b5d-251a-434f-ae58-72f81abd20a1" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/SoapISPService/Client</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.SoapISPService.example.org/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <soap:getAllInstallationsOfClient>\r
+         <arg0>?</arg0>\r
+      </soap:getAllInstallationsOfClient>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.SoapISPService.example.org/ClientSoapInt/getAllInstallationsOfClient"/></con:call></con:operation><con:operation id="e5bcf6e7-a961-47d2-9b42-c204b26d3f3e" isOneWay="false" action="" name="removeClient" bindingOperationName="removeClient" type="Request-Response" outputName="removeClientResponse" inputName="removeClient" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="7f97d7fb-86a8-443d-8092-3cc3db7899b3" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/SoapISPService/Client</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.SoapISPService.example.org/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <soap:removeClient>\r
+         <arg0>?</arg0>\r
+      </soap:removeClient>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.SoapISPService.example.org/ClientSoapInt/removeClient"/></con:call></con:operation><con:operation id="77808ae4-e168-4c83-8d6c-6abb9f0a7796" isOneWay="false" action="" name="removeInstallation" bindingOperationName="removeInstallation" type="Request-Response" outputName="removeInstallationResponse" inputName="removeInstallation" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="7ec1d211-7e0e-438f-bc17-01130e040cb6" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/SoapISPService/Client</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.SoapISPService.example.org/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <soap:removeInstallation>\r
+         <arg0>?</arg0>\r
+      </soap:removeInstallation>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.SoapISPService.example.org/ClientSoapInt/removeInstallation"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>

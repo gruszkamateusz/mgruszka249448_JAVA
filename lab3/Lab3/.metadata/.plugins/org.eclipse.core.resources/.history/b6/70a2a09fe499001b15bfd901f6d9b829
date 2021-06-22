@@ -1,0 +1,63 @@
+package main;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import java.awt.BorderLayout;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.awt.event.ActionEvent;
+
+public class Window {
+	protected JFrame frame;
+	protected JPanel panel;
+	private JTextField textField;
+	private static String[] pathnames = null;
+    
+	public Window() { 
+		initialize();
+	}
+
+	private void initialize() {
+		setFrame(new JFrame());
+		
+		getFrame().setBounds(100, 100, 600, 400);
+		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		textField = new JTextField();
+		textField.setBounds(164, 50, 239, 28);
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
+		JButton btnSnap = new JButton("Snapshot");
+		btnSnap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+  
+			}
+		});
+		btnSnap.setBounds(164, 88, 103, 21);
+		frame.getContentPane().add(btnSnap);
+		
+		JButton btnVer = new JButton("Verification");
+		btnVer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnVer.setBounds(300, 88, 103, 21);
+		frame.getContentPane().add(btnVer);
+		}
+
+
+}

@@ -1,0 +1,16 @@
+package chat_lib_pack;
+
+/** Allows to listen incoming messages to receiver. */
+public interface ReceiverListener {
+	/**
+	 * Fired on start and stop of listening.
+	 */
+	void stateChanged();
+	
+	/**
+	 * Fired on message receiving.
+	 * 
+	 * @param rcvData - received data
+	 */
+	void messageReceived(byte[] rcvData, String host, int port);
+}

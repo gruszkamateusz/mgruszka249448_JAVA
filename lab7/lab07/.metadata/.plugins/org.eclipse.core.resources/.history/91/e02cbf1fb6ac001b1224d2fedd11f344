@@ -1,0 +1,96 @@
+package isp_app_pack;
+
+import java.awt.Dimension;
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+
+import isp_app_pack.dao.ChargeDao;
+import isp_app_pack.dao.ClientDao;
+import isp_app_pack.dao.InstallationDao;
+import isp_app_pack.dao.PaymentDao;
+import isp_app_pack.dao.TariffDao;
+import isp_app_pack.model.Charge;
+import isp_app_pack.model.Client;
+import isp_app_pack.model.Installation;
+import isp_app_pack.model.Payment;
+import isp_app_pack.model.Tariff;
+
+public class MainWindow extends JFrame {
+	private static final long serialVersionUID = 2771194675508602838L;
+	private boolean end;
+	private ClientDao clientDao;
+	private ChargeDao chargeDao;
+	private TariffDao tariffDao;
+	private InstallationDao installDao;
+	private PaymentDao paymentDao;
+	private LocalDate currentDate;
+
+	public MainWindow() {
+		end = false;
+		setTitle("ISP Admin");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocation(300, 300);
+		setSize(520, 501);
+		setPreferredSize(new Dimension(300, 300));
+		setMinimumSize(new Dimension(300, 300));
+
+		clientDao = new ClientDao();
+		tariffDao = new TariffDao();
+		installDao = new InstallationDao(clientDao, tariffDao);
+		chargeDao = new ChargeDao(installDao);
+		paymentDao = new PaymentDao(chargeDao);
+
+		clientDao.createTable();
+		chargeDao.createTable();
+		tariffDao.createTable();
+		installDao.createTable();
+		paymentDao.createTable();
+
+		JTabbedPane tabPane = new JTabbedPane();
+		getContentPane().add(tabPane);
+
+		if(clientDao.dbIsEmpty())
+			addTestData();
+		
+		DataTablePane<Client> clientPane = new DataTablePane<Client>(clientDao);
+		DataTablePane<Charge> chargePane = new DataTablePane<Charge>(chargeDao);
+		DataTablePane<Tariff> tariffPane = new DataTablePane<Tariff>(tariffDao);
+		DataTablePane<Installation> installPane = new DataTablePane<Installation>(installDao);
+		DataTablePane<Payment> paymentPane = new DataTablePane<Payment>(paymentDao);
+
+		tabPane.add("Clients", clientPane);
+		tabPane.add("Installations", installPane);
+		tabPane.add("Charges", chargePane);
+		tabPane.add("Payments", paymentPane);
+		tabPane.add("Tariffs", tariffPane);
+	}
+
+	public void addTestData() {
+		Client cl0 = new Client("Name1", "Lastname1");
+		Client cl1 = new Client("Name2", "Lastname2");
+		clientDao.add(cl0);
+		clientDao.add(cl1);
+		Tariff tar0 = new Tariff("oferta1", 9.99);
+		Tariff tar1 = new Tariff("oferta2", 19.99);
+		Tariff tar2 = new Tariff("oferta3", 29.99);
+		tariffDao.add(tar0);
+		tariffDao.add(tar1);
+		tariffDao.add(tar2);		
+		Installation ins0 = new Installation(cl0, "Owocowa 1", tar0);
+		Installation ins1 = new Installation(cl1, "Truskawkowa 12", tar1);
+		installDao.add(ins0);
+		installDao.add(ins1);
+		Charge ch0 = new Charge(ins0, currentDate.plusDays(10), tar0.getPrice());
+		Charge ch1 = new Charge(ins1, currentDate.plusDays(20), tar1.getPrice());
+		chargeDao.add(ch0);
+		chargeDao.add(ch1);
+	}
+	
+	public static void main(String[] args) {
+		MainWindow window = new MainWindow();
+		window.setVisible(true);
+	}
+}

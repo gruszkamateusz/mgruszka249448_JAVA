@@ -1,0 +1,83 @@
+package main;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import java.awt.BorderLayout;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.awt.event.ActionEvent;
+
+public class Window  extends JFrame{
+	private JTextField textFieldKraj;
+	private JTextField textField;
+	public Window() {
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Ile miast w kraju");
+		lblNewLabel.setBounds(10, 24, 140, 22);
+		getContentPane().add(lblNewLabel);
+		
+		textFieldKraj = new JTextField();
+		textFieldKraj.setBounds(160, 26, 76, 19);
+		getContentPane().add(textFieldKraj);
+		textFieldKraj.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("ma liczbe mieszkancow wieksza niz");
+		lblNewLabel_1.setBounds(252, 27, 210, 17);
+		getContentPane().add(lblNewLabel_1);
+		
+		textField = new JTextField();
+		textField.setBounds(472, 26, 76, 19);
+		getContentPane().add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("Odpowiedz");
+		lblNewLabel_2.setBounds(10, 81, 115, 19);
+		getContentPane().add(lblNewLabel_2);
+		
+		JTextArea textArea = new JTextArea();
+		textArea.setBounds(10, 110, 404, 21);
+		getContentPane().add(textArea);
+		
+		JButton btnNewButton = new JButton("Sprawdz");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				HttpRequest request = HttpRequest.newBuilder()
+						.uri(URI.create("https://wft-geo-db.p.rapidapi.com/v1/geo/cities"))
+						.header("x-rapidapi-key", "ee0f1dfa9dmshb94c64fcd53b738p12ad47jsn9219613b9c91")
+						.header("x-rapidapi-host", "wft-geo-db.p.rapidapi.com")
+						.method("GET", HttpRequest.BodyPublishers.noBody())
+						.build();
+				HttpResponse<String> response;
+				
+				try {
+					response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+					System.out.println(response.body());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+					
+			}
+		});
+		btnNewButton.setBounds(10, 141, 85, 21);
+		getContentPane().add(btnNewButton);
+	}
+}

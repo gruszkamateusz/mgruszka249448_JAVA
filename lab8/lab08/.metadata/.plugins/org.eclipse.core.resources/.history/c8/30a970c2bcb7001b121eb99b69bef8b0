@@ -1,0 +1,25 @@
+package org.example.SoapISPService.soap;
+
+import java.util.List;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+
+import org.example.SoapISPService.model.Charge;
+
+@WebService
+public interface ChargeSoapInt {
+	@WebMethod public Charge createCharge(long installationId, String date, double amount);
+	
+	@WebMethod public int removeCharge(long chargeId);
+
+	@WebMethod public Charge getCharge(long chargeId);
+
+	@WebMethod public List<Charge> getAllCharges();
+	
+	@WebMethod public List<Charge> getAllChargesOfInstall(long installId);
+	
+	@WebMethod public List<Charge> getChargesOfClient(long clientId,
+			String beginDate, String endDate);
+	
+	@WebMethod public String getCurrentDate();
+}

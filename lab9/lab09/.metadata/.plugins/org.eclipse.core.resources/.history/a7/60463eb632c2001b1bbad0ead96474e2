@@ -1,0 +1,141 @@
+package chat_lib_pack;
+
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+/**
+ * Asymmetric cryptography en/decoder that uses pair of keys: public key, which
+ * may be share widely, and private key, which are known only to the owner. In
+ * this algorithm any person can encrypt a message using the receiver's public
+ * key, but that encrypted message can only be decrypted with the receiver's
+ * private key. (https://en.wikipedia.org/wiki/Public-key_cryptography)
+ */
+public class AsymmetricCryptor {
+	private PublicKey publicKey;
+	private PrivateKey privateKey;
+
+	/** Creates instance with no keys set. */
+	public AsymmetricCryptor() {
+		publicKey = null;
+		privateKey = null;
+	}
+
+	/**
+	 * Generates pair of keys with the given length.
+	 * 
+	 * @param keyLength - length of keys in bytes
+	 * @throws InvalidParameterException 
+	 */
+	public void generateKeys(int keyLength) throws InvalidParameterException {
+		KeyPairGenerator keyGen;
+		try {
+			keyGen = KeyPairGenerator.getInstance("RSA");
+			keyGen.initialize(keyLength);
+			KeyPair pair = keyGen.generateKeyPair();
+			publicKey = pair.getPublic();
+			privateKey = pair.getPrivate();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Returns public key or null, if keys have not been generated.
+	 * 
+	 * @return public key or null
+	 */
+	public PublicKey getPublicKey() {
+		return publicKey;
+	}
+
+	/**
+	 * Returns private key or null, if keys have not been generated.
+	 * 
+	 * @return private key or null
+	 */
+	public PrivateKey getPrivateKey() {
+		return privateKey;
+	}
+
+	/**
+	 * Decodes and saves the public key from the encoded data.
+	 * @param pubKey - encoded private key
+	 * 
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException 
+	 */
+	public void setEncodedPublicKey(byte[] pubKey)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
+		X509EncodedKeySpec ks = new X509EncodedKeySpec(pubKey);
+		KeyFactory kf = KeyFactory.getInstance("RSA");
+		this.publicKey = kf.generatePublic(ks);
+	}
+
+	/**
+	 * Decodes and saves the private key from the encoded data.
+	 * @param privateKey - encoded private key
+	 * 
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException 
+	 */
+	public void setEncodedPrivateKey(byte[] privateKey)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
+		PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(privateKey);
+		KeyFactory kf = KeyFactory.getInstance("RSA");
+		this.privateKey = kf.generatePrivate(spec);
+	}
+
+	/**
+	 * Encrypts the given data with set earlier public key.
+	 * 
+	 * @param data - the given data
+	 * @return encrypted data
+	 * 
+	 * @throws InvalidKeyException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException 
+	 */
+	public byte[] encrypt(byte[] data) throws InvalidKeyException,
+			IllegalBlockSizeException, BadPaddingException {
+		Cipher cipher;
+		byte[] encryptedData = null;
+		try {
+			cipher = Cipher.getInstance("RSA");
+			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+			encryptedData = cipher.doFinal(data);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			e.printStackTrace();
+		}
+		return encryptedData;
+	}
+
+	/**
+	 * Decrypts the given data with set earlier private key.
+	 * 
+	 * @param data - the given data
+	 * @return decrypted data
+	 * 
+	 * @throws InvalidKeyException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException 
+	 */
+	public byte[] decrypt(byte[] data) throws InvalidKeyException,
+			IllegalBlockSizeException, BadPaddingException {
+		Cipher cipher;
+		byte[] decryptedData = null;
+		try {
+			cipher = Cipher.getInstance("RSA");
+			cipher.init(Cipher.DECRYPT_MODE, privateKey);
+			decryptedData = cipher.doFinal(data);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			e.printStackTrace();
+		}
+		return decryptedData;
+	}
+}

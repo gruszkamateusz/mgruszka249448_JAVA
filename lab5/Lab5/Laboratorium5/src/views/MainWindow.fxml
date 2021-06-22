@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="458.0" prefWidth="461.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
+   <children>
+      <TableView id="Wynik" fx:id="Dane" layoutX="33.0" layoutY="164.0" prefHeight="131.0" prefWidth="414.0">
+         <columns>
+            <TableColumn id="c5" prefWidth="75.0" text="C5" />
+            <TableColumn id="c6" prefWidth="75.0" text="C6" />
+            <TableColumn id="c7" prefWidth="75.0" text="C7" />
+            <TableColumn id="c8" prefWidth="75.0" text="C8" />
+         </columns></TableView>
+      <TableView id="Dane" fx:id="DanePrzetworzone" editable="true" layoutX="33.0" layoutY="14.0" prefHeight="131.0" prefWidth="414.0">
+         <columns>
+            <TableColumn prefWidth="75.0" text="C1" />
+            <TableColumn id="c2" prefWidth="75.0" text="C2" />
+            <TableColumn id="c3" prefWidth="75.0" text="C3" />
+            <TableColumn id="c4" prefWidth="75.0" text="C4" />
+         </columns></TableView>
+      <Button fx:id="WykonajAnalize" layoutX="33.0" layoutY="325.0" mnemonicParsing="false" onAction="#btnActionHandler" prefHeight="45.0" prefWidth="137.0" text="Wykonaj" />
+      <ComboBox fx:id="WyborAlgorytmu" layoutX="284.0" layoutY="332.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>

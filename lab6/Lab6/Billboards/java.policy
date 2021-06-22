@@ -1,0 +1,6 @@
+grant {
+    // allows anyone to listen on dynamic ports
+    permission java.net.SocketPermission "*:1000-", "connect, resolve, accept, listen"; 
+    permission java.util.PropertyPermission "*", "read, write";
+
+};

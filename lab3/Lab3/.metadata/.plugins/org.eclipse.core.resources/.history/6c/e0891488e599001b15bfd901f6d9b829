@@ -1,0 +1,50 @@
+package main;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import java.awt.BorderLayout;
+import javax.swing.JTextField;
+
+import com.sun.jdi.event.EventQueue;
+
+import javax.swing.JTextArea;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.awt.event.ActionEvent;
+
+public class Window  extends JFrame{
+	private JFrame frame;
+	private JPanel panel;
+
+
+	public Window() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		panel = new JPanel();
+		frame.setResizable(false);
+		frame.setBounds(100, 100, 525, 350);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setContentPane(panel);
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+}

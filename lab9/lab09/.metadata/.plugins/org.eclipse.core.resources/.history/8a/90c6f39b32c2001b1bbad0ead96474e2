@@ -1,0 +1,28 @@
+package chat_lib_pack;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+/** Allows sending data via TCP/IP socket. */
+public class Sender {
+	/**
+	 * Sends data via TCP/IP socket to socket with given host and port.
+	 * 
+	 * @param data - data to send
+	 * @param host - host of receiving socket
+	 * @param port - port of receiving socket
+	 * 
+	 * @throws UnknownHostException
+	 * @throws IOException 
+	 */
+	public void send(byte[] data, String host, int port)
+			throws UnknownHostException, IOException {
+		Socket socket;
+		socket = new Socket(host, port);
+		OutputStream out = socket.getOutputStream();
+		out.write(data);
+		socket.close();
+	}
+}

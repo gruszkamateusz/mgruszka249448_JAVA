@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?language javascript?>
+
+<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="655.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <fx:script>
+          function onGUIStyleChooserAction() {
+            var id = styleToggleGroup.getToggles().indexOf(styleToggleGroup.getSelectedToggle());
+            var scene = borderpane.getScene();
+            scene.getStylesheets().clear();
+
+            switch(id) {
+                case 0:
+                    scene.getStylesheets().add(Main.getResource("application.css"));
+                    break;
+                case 1:
+                    scene.getStylesheets().add(Main.getResource("application_dark.css"));
+                    break;
+
+                default:
+                    break;
+            }
+        }
+</fx:script>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ListView fx:id="wishesList" layoutX="14.0" layoutY="68.0" prefHeight="279.0" prefWidth="203.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <TextArea fx:id="taGeneratedWishes" layoutX="206.0" layoutY="87.0" prefHeight="261.0" prefWidth="432.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="206.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="87.0" />
+            <TextField fx:id="tfWisherName" layoutX="342.0" layoutY="23.0" prefHeight="25.0" prefWidth="132.0" AnchorPane.leftAnchor="342.0" AnchorPane.topAnchor="23.0" />
+            <Label fx:id="lblStrategy" layoutX="209.0" layoutY="6.0" text="Strategia wyboru:" AnchorPane.leftAnchor="209.0" AnchorPane.topAnchor="6.0" />
+            <Label fx:id="lblWisherName" layoutX="342.0" layoutY="6.0" text="Imię życzącego:" AnchorPane.leftAnchor="342.0" AnchorPane.topAnchor="6.0" />
+            <Button fx:id="btnGenerateWishes" layoutX="209.0" layoutY="55.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="427.0" text="Generuj życzenia" AnchorPane.leftAnchor="209.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="55.0" />
+            <ChoiceBox fx:id="choiceBoxStrategy" layoutX="209.0" layoutY="23.0" prefHeight="25.0" prefWidth="127.0" />
+            <TextField fx:id="lblBirthdayPersonrName" layoutX="478.0" layoutY="23.0" />
+            <Label layoutX="478.0" layoutY="6.0" text="Imię solenizanta:" />
+         </children>
+      </AnchorPane>
+   </center>
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+            <Menu fx:id="guiStyleChooser" mnemonicParsing="false" text="Styl interfejsu" />
+        </menus>
+      </MenuBar>
+   </top>
+</BorderPane>

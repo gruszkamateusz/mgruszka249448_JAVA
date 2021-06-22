@@ -1,0 +1,20 @@
+package main;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+import javax.swing.JFrame;
+
+public class Main{
+	public static void main(String[] args){
+
+		Window window = new Window();
+		window.setVisible(true);
+		window.setBounds(100, 100, 525, 350);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+}	

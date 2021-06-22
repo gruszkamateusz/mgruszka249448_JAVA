@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+C:\Users\huawei\Desktop\lab08\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+1960801073.index
+43317568.index
+2234137976.index
+3969450919.index
+3628273151.index
+2673874495.index
